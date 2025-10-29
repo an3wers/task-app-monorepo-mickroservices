@@ -1,0 +1,19 @@
+{
+  "name": "task_app_mks",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "acc": "pnpm --filter @task_app_mks/account",
+    "brd": "pnpm --filter @task_app_mks/board",
+    "eml": "pnpm --filter @task_app_mks/email",
+    "fls": "pnpm --filter @task_app_mks/files"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.17.1",
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3"
+  }
+}
