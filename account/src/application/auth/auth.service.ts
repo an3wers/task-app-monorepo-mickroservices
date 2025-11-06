@@ -29,7 +29,7 @@ export class AuthService {
 
     const user = await this.userService.create(dto);
 
-    // TODO: send email with activation link
+    // TODO: send email with activation link with email microservice
 
     const tokens = this.jwtService.generateTokens({
       sub: user.id,

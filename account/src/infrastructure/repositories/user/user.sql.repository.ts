@@ -13,7 +13,7 @@ export class UserSqlRepository
   delete(id: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  findById(id: string): Promise<UserEntity | null> {
+  findByUuid(uuid: string): Promise<UserEntity | null> {
     throw new Error("Method not implemented.");
   }
   findByEmail(email: string): Promise<UserEntity | null> {

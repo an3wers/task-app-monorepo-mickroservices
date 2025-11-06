@@ -4,7 +4,7 @@ import type { UpdateUserData } from "../types/update-user-data.ts";
 
 export interface IUserRepository {
   create(data: CreateUserData): Promise<UserEntity>;
-  findById(id: string): Promise<UserEntity | null>;
+  findByUuid(uuid: string): Promise<UserEntity | null>;
   findByEmail(email: string): Promise<UserEntity | null>;
   update(id: string, data: UpdateUserData): Promise<UserEntity>;
   delete(id: string): Promise<void>;

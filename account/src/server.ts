@@ -4,7 +4,12 @@ import { config } from "./config/env.ts";
 import { AuthRouter } from "./infrastructure/routes/auth/auth.routes.ts";
 import { errorHandler } from "./middleware/error-handler.middleware.ts";
 import { createDatabaseConfig, DatabasePool } from "@shared/db-lib";
-import { UserSqlRepository } from "./infrastructure/repositories/user/user.sql.repository.ts";
+// import { UserSqlRepository } from "./infrastructure/repositories/user/user.sql.repository.ts";
+import { UserPrismaRepository } from "./infrastructure/repositories/user/user.prisma.repository.ts";
+import {
+  checkDatabaseConnection,
+  disconnectPrisma,
+} from "@shared/db-prisma-lib";
 
 let db: DatabasePool;
 const app: Express = express();
@@ -22,8 +27,7 @@ try {
   // db
   db = new DatabasePool(createDatabaseConfig());
 
-  // routes
-
+  // health check
   app.get("/api/health", (req, res) => {
     res.status(200).json({
       status: "OK",
@@ -32,7 +36,24 @@ try {
     });
   });
 
-  const userRepository = new UserSqlRepository(db);
+  // prisma health check
+  app.get("/api/check-prisma", async (req, res) => {
+    const isConnected = await checkDatabaseConnection();
+    if (isConnected) {
+      res.status(200).json({
+        status: "OK",
+        message: "Prisma connection is successful",
+      });
+    } else {
+      res.status(500).json({
+        status: "ERROR",
+        message: "Prisma connection failed",
+      });
+    }
+  });
+
+  // routes
+  const userRepository = new UserPrismaRepository(); // new UserSqlRepository(db);
   app.use("/api/auth", new AuthRouter(userRepository).router);
 
   // 404 handler
@@ -52,6 +73,7 @@ try {
 process.on("SIGTERM", async () => {
   console.log("SIGTERM received, closing database connection...");
   await db.close();
+  await disconnectPrisma();
   process.exit(0);
 });
 

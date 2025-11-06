@@ -6,14 +6,25 @@
     "acc": "pnpm --filter @task_app_mks/account",
     "brd": "pnpm --filter @task_app_mks/board",
     "eml": "pnpm --filter @task_app_mks/email",
-    "fls": "pnpm --filter @task_app_mks/files"
+    "fls": "pnpm --filter @task_app_mks/files",
+    "prisma:md": "prisma migrate dev",
+    "prisma:gen": "prisma generate",
+    "prisma:push": "prisma db push",
+    "prisma:pull": "prisma db pull",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.17.1",
   "devDependencies": {
+    "@types/node": "^24.10.0",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "dotenv": "^17.2.3",
+    "prisma": "^6.19.0"
   }
 }
