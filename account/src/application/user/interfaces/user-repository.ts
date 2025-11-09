@@ -6,6 +6,6 @@ export interface IUserRepository {
   create(data: CreateUserData): Promise<UserEntity>;
   findByUuid(uuid: string): Promise<UserEntity | null>;
   findByEmail(email: string): Promise<UserEntity | null>;
-  update(id: string, data: UpdateUserData): Promise<UserEntity>;
-  delete(id: string): Promise<void>;
+  update(uuid: string, data: UpdateUserData): Promise<UserEntity>;
+  delete(uuid: string): Promise<void>;
 }

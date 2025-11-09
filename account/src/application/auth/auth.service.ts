@@ -32,11 +32,17 @@ export class AuthService {
     // TODO: send email with activation link with email microservice
 
     const tokens = this.jwtService.generateTokens({
-      sub: user.id,
+      sub: user.uuid,
       email: user.email,
-      role: user.role,
-      isActive: user.isActive,
+      isActivated: user.isActivated,
     });
+
+    // TODO: save tokens to database
+    try {
+      this.jwtService.saveRefreshToken(tokens.refreshToken, Number(user.id));
+    } catch {
+      // ignore error
+    }
 
     return tokens;
   }
@@ -45,10 +51,9 @@ export class AuthService {
     const user = await this.userService.validateUser(dto.email, dto.password);
 
     const tokens = this.jwtService.generateTokens({
-      sub: user.id,
+      sub: user.uuid,
       email: user.email,
-      role: user.role,
-      isActive: user.isActive,
+      isActivated: user.isActivated,
     });
 
     return tokens;
@@ -61,18 +66,32 @@ export class AuthService {
       throw new ValidationError("Invalid refresh token");
     }
 
-    const user = await this.userService.findById(payload.sub as string);
+    // const oldToken = this.jwtService. // TODO: get saved token from database
+    const currentToken = await this.jwtService.getRefreshToken(
+      dto.refreshToken,
+    );
+
+    if (!currentToken) {
+      throw new ValidationError("Invalid refresh token");
+    }
+
+    const user = await this.userService.findByUuid(payload.sub as string);
 
     if (!user) {
       throw new NotFoundError("User not found");
     }
 
     const tokens = this.jwtService.generateTokens({
-      sub: user.id,
+      sub: user.uuid,
       email: user.email,
-      role: user.role,
-      isActive: user.isActive,
+      isActivated: user.isActivated,
     });
+
+    try {
+      this.jwtService.saveRefreshToken(tokens.refreshToken, Number(user.id));
+    } catch (error) {
+      // ignore error
+    }
 
     return tokens;
   }

@@ -12,7 +12,7 @@ export class UserPrismaRepository implements IUserRepository {
     throw new Error("Method not implemented.");
   }
   async findByUuid(uuid: string): Promise<UserEntity | null> {
-    const userPrisma = await prisma.users.findUnique({
+    const userPrisma = await prisma.user.findUnique({
       where: {
         uuid,
       },
@@ -25,7 +25,7 @@ export class UserPrismaRepository implements IUserRepository {
     return mapToDomain(userPrisma);
   }
   async findByEmail(email: string): Promise<UserEntity | null> {
-    const userPrisma = await prisma.users.findUnique({
+    const userPrisma = await prisma.user.findUnique({
       where: {
         email,
       },
@@ -50,12 +50,11 @@ function mapToDomain(prismaData: any): UserEntity {
     email: prismaData.email,
     password: prismaData.password,
     username: prismaData.username,
-    role: prismaData.role,
     isActivated: prismaData.isActivated,
     fullName: prismaData.fullName,
     avatarUrl: prismaData.avatarUrl,
+    activationLink: prismaData.activationLink,
     createdAt: prismaData.createdAt,
     updatedAt: prismaData.updatedAt,
-    activationLink: prismaData.activationLink,
   });
 }
