@@ -22,7 +22,11 @@ export class TokenPrismaRepository implements ITokenRepository {
     return refreshToken;
   }
 
-  deleteToken(token: string): Promise<void> {
-    throw new Error("No implements");
+  async deleteToken(token: string): Promise<void> {
+    await prisma.refreshToken.delete({
+      where: {
+        token,
+      },
+    });
   }
 }

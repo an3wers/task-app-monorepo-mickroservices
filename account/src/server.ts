@@ -4,12 +4,12 @@ import { config } from "./config/env.ts";
 import { AuthRouter } from "./infrastructure/routes/auth/auth.routes.ts";
 import { errorHandler } from "./middleware/error-handler.middleware.ts";
 import { createDatabaseConfig, DatabasePool } from "@shared/db-lib";
-// import { UserSqlRepository } from "./infrastructure/repositories/user/user.sql.repository.ts";
 import { UserPrismaRepository } from "./infrastructure/repositories/user/user.prisma.repository.ts";
 import {
   checkDatabaseConnection,
   disconnectPrisma,
 } from "@shared/db-prisma-lib";
+import { TokenPrismaRepository } from "./infrastructure/repositories/auth/token.prisma.repository.ts";
 
 let db: DatabasePool;
 const app: Express = express();
@@ -54,7 +54,8 @@ try {
 
   // routes
   const userRepository = new UserPrismaRepository(); // new UserSqlRepository(db);
-  app.use("/api/auth", new AuthRouter(userRepository).router);
+  const tokenRepository = new TokenPrismaRepository();
+  app.use("/api/auth", new AuthRouter(userRepository, tokenRepository).router);
 
   // 404 handler
   app.use((req, res) => {

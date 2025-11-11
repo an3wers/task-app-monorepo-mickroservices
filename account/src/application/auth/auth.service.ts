@@ -5,7 +5,6 @@ import {
   NotFoundError,
   ValidationError,
 } from "../../errors/app-error.ts";
-import type { IUserRepository } from "../user/interfaces/user-repository.ts";
 import type { UserService } from "../user/user.service.ts";
 import type { JwtServive } from "./jwt.service.ts";
 
@@ -37,7 +36,6 @@ export class AuthService {
       isActivated: user.isActivated,
     });
 
-    // TODO: save tokens to database
     try {
       this.jwtService.saveRefreshToken(tokens.refreshToken, Number(user.id));
     } catch {
@@ -55,6 +53,12 @@ export class AuthService {
       email: user.email,
       isActivated: user.isActivated,
     });
+
+    try {
+      this.jwtService.saveRefreshToken(tokens.refreshToken, Number(user.id));
+    } catch {
+      // ignore error
+    }
 
     return tokens;
   }
@@ -96,7 +100,13 @@ export class AuthService {
     return tokens;
   }
 
-  async getMe() {
-    return { userId: "123" };
+  async getMe(uuid: string) {
+    const user = await this.userService.findByUuid(uuid);
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    return user;
   }
 }

@@ -1,0 +1,95 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Debug Account Service",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": [
+                "--filter",
+                "@task_app_mks/account",
+                "run",
+                "dev"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/**/node_modules/**"
+            ]
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Debug Board Service",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": [
+                "--filter",
+                "@task_app_mks/board",
+                "run",
+                "dev"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/**/node_modules/**"
+            ]
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Debug Email Service",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": [
+                "--filter",
+                "@task_app_mks/email",
+                "run",
+                "dev"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/**/node_modules/**"
+            ]
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Debug Files Service",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": [
+                "--filter",
+                "@task_app_mks/files",
+                "run",
+                "dev"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/**/node_modules/**"
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug All Services",
+            "configurations": [
+                "Debug Account Service",
+                "Debug Board Service",
+                "Debug Email Service",
+                "Debug Files Service"
+            ]
+        }
+    ]
+}
