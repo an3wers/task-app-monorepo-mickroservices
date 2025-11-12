@@ -3,13 +3,25 @@ import { prisma } from "@shared/db-prisma-lib";
 import type { IUserRepository } from "../../../application/user/interfaces/user-repository.ts";
 import type { CreateUserData } from "../../../application/user/types/create-user-data.ts";
 import { UserEntity } from "../../../domain/user/user.domain.ts";
+import type { UpdateUserData } from "../../../application/user/types/update-user-data.ts";
 
 export class UserPrismaRepository implements IUserRepository {
-  create(data: CreateUserData): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
+  async create(data: CreateUserData): Promise<UserEntity> {
+    const user = await prisma.user.create({
+      data: {
+        email: data.email,
+        passwordHash: data.password,
+        username: data.name,
+        isActivated: data.isActivated,
+        activationLink: data.activationLink,
+      },
+    });
+
+    return mapToDomain(user);
   }
   delete(id: string): Promise<void> {
     throw new Error("Method not implemented.");
+    // TODO: implement soft delete
   }
   async findByUuid(uuid: string): Promise<UserEntity | null> {
     const userPrisma = await prisma.user.findUnique({
@@ -37,8 +49,18 @@ export class UserPrismaRepository implements IUserRepository {
 
     return mapToDomain(userPrisma);
   }
-  update(id: string, data: any): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
+  async update(id: string, data: UpdateUserData): Promise<UserEntity> {
+    const user = await prisma.user.update({
+      where: {
+        uuid: id,
+      },
+      data: {
+        email: data.email,
+        username: data.name,
+        passwordHash: data.password,
+      },
+    });
+    return mapToDomain(user);
   }
 }
 
