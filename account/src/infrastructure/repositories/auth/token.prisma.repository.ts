@@ -8,7 +8,7 @@ export class TokenPrismaRepository implements ITokenRepository {
       data: {
         token,
         userId: userId,
-        expiresAt: String(expiresAt),
+        expiresAt: new Date(expiresAt),
       },
     });
   }

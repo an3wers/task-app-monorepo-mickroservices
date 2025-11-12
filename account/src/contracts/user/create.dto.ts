@@ -1,3 +1,5 @@
+// TODO: zod schema
+
 export interface CreateUserDto {
   email: string;
   name: string;

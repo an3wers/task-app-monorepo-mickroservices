@@ -1,5 +1,6 @@
 import type { LoginDto } from "../../contracts/auth/login.dto.ts";
 import type { RegisterDto } from "../../contracts/auth/register.dto.ts";
+import type { GetUserDto } from "../../contracts/user/get-user.dto.ts";
 import {
   ConflictError,
   NotFoundError,
@@ -100,13 +101,20 @@ export class AuthService {
     return tokens;
   }
 
-  async getMe(uuid: string) {
+  async getMe(uuid: string): Promise<GetUserDto> {
     const user = await this.userService.findByUuid(uuid);
 
     if (!user) {
       throw new NotFoundError("User not found");
     }
 
-    return user;
+    return {
+      uuid: user.uuid,
+      email: user.email,
+      username: user.username,
+      fullName: user.fullName,
+      avatarUrl: user.avatarUrl,
+      isActivated: user.isActivated,
+    };
   }
 }

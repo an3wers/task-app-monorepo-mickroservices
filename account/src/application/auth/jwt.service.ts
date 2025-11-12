@@ -33,7 +33,7 @@ export class JwtServive {
     if (typeof payload === "string") {
       await this.tokenRepository.saveToken(token, userId, 0);
     } else {
-      await this.tokenRepository.saveToken(token, userId, payload.exp || 0);
+      await this.tokenRepository.saveToken(token, userId, payload.exp! * 1000);
     }
   }
 

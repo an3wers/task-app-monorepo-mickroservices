@@ -23,7 +23,6 @@ export class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       const dto = req.body;
-      console.log("authService", this);
       const tokens = await this.authService.register(dto);
       return res.status(201).json(tokens);
     } catch (error) {
@@ -31,9 +30,25 @@ export class AuthController {
     }
   }
 
-  async login(req: Request, res: Response, next: NextFunction) {}
+  async login(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = req.body;
+      const tokens = await this.authService.login(dto);
+      return res.status(200).json(tokens);
+    } catch (error) {
+      next(error);
+    }
+  }
 
-  async refreshTokens(req: Request, res: Response, next: NextFunction) {}
+  async refreshTokens(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = req.body;
+      const tokens = await this.authService.refreshTokens(dto);
+      return res.status(200).json(tokens);
+    } catch (error) {
+      next(error);
+    }
+  }
 
   async getMe(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
@@ -49,7 +64,7 @@ export class AuthController {
 
       const user = await this.authService.getMe(sub as string);
 
-      return res.status(200).json({ user });
+      return res.status(200).json({ data: user });
     } catch (error) {
       next(error);
     }
