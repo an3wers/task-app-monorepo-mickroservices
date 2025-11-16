@@ -1,9 +1,9 @@
-import { prisma } from "@shared/db-prisma-lib";
+import { prisma, type User } from "@shared/db-prisma-lib";
 
-import type { IUserRepository } from "../../../application/user/interfaces/user-repository.ts";
-import type { CreateUserData } from "../../../application/user/types/create-user-data.ts";
-import { UserEntity } from "../../../domain/user/user.domain.ts";
-import type { UpdateUserData } from "../../../application/user/types/update-user-data.ts";
+import type { IUserRepository } from "../../../application/users/interfaces/users-repository.ts";
+import type { CreateUserData } from "../../../application/users/types/create-user-data.ts";
+import { UserEntity } from "../../../domain/users/users.domain.ts";
+import type { UpdateUserData } from "../../../application/users/types/update-user-data.ts";
 
 export class UserPrismaRepository implements IUserRepository {
   async create(data: CreateUserData): Promise<UserEntity> {
@@ -11,7 +11,7 @@ export class UserPrismaRepository implements IUserRepository {
       data: {
         email: data.email,
         passwordHash: data.password,
-        username: data.name,
+        username: data.username,
         isActivated: data.isActivated,
         activationLink: data.activationLink,
       },
@@ -56,7 +56,8 @@ export class UserPrismaRepository implements IUserRepository {
       },
       data: {
         email: data.email,
-        username: data.name,
+        username: data.username,
+        fullName: data.fullName,
         passwordHash: data.password,
       },
     });
@@ -64,18 +65,17 @@ export class UserPrismaRepository implements IUserRepository {
   }
 }
 
-// TODO: fix any
-function mapToDomain(prismaData: any): UserEntity {
+function mapToDomain(prismaData: User): UserEntity {
   return new UserEntity({
     id: prismaData.id,
     uuid: prismaData.uuid,
     email: prismaData.email,
-    password: prismaData.password,
+    password: prismaData.passwordHash,
     username: prismaData.username,
     isActivated: prismaData.isActivated,
-    fullName: prismaData.fullName,
-    avatarUrl: prismaData.avatarUrl,
-    activationLink: prismaData.activationLink,
+    fullName: prismaData.fullName ?? "",
+    avatarUrl: prismaData.avatarUrl ?? "",
+    activationLink: prismaData.activationLink ?? "",
     createdAt: prismaData.createdAt,
     updatedAt: prismaData.updatedAt,
   });

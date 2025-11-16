@@ -4,7 +4,7 @@ import { config } from "./config/env.ts";
 import { AuthRouter } from "./infrastructure/routes/auth/auth.routes.ts";
 import { errorHandler } from "./middleware/error-handler.middleware.ts";
 import { createDatabaseConfig, DatabasePool } from "@shared/db-lib";
-import { UserPrismaRepository } from "./infrastructure/repositories/user/user.prisma.repository.ts";
+import { UserPrismaRepository } from "./infrastructure/repositories/users/users.prisma.repository.ts";
 import {
   checkDatabaseConnection,
   disconnectPrisma,
@@ -57,6 +57,8 @@ try {
   const tokenRepository = new TokenPrismaRepository();
   app.use("/api/auth", new AuthRouter(userRepository, tokenRepository).router);
 
+  // TODO: users route
+
   // 404 handler
   app.use((req, res) => {
     res.status(404).json({
@@ -73,6 +75,13 @@ try {
 
 process.on("SIGTERM", async () => {
   console.log("SIGTERM received, closing database connection...");
+  await db.close();
+  await disconnectPrisma();
+  process.exit(0);
+});
+
+process.on("SIGINT", async () => {
+  console.log("SIGINT received, disconnecting Prisma...");
   await db.close();
   await disconnectPrisma();
   process.exit(0);

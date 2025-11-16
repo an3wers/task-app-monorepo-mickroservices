@@ -1,7 +1,7 @@
 import { BaseRepository } from "@shared/db-lib";
-import type { IUserRepository } from "../../../application/user/interfaces/user-repository.ts";
-import type { CreateUserData } from "../../../application/user/types/create-user-data.ts";
-import type { UserEntity } from "../../../domain/user/user.domain.ts";
+import type { IUserRepository } from "../../../application/users/interfaces/users-repository.ts";
+import type { CreateUserData } from "../../../application/users/types/create-user-data.ts";
+import type { UserEntity } from "../../../domain/users/users.domain.ts";
 
 export class UserSqlRepository
   extends BaseRepository

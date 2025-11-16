@@ -1,13 +1,14 @@
 import type { LoginDto } from "../../contracts/auth/login.dto.ts";
 import type { RegisterDto } from "../../contracts/auth/register.dto.ts";
-import type { GetUserDto } from "../../contracts/user/get-user.dto.ts";
+import type { GetUserDto } from "../../contracts/users/get-user.dto.ts";
 import {
   ConflictError,
   NotFoundError,
   ValidationError,
 } from "../../errors/app-error.ts";
-import type { UserService } from "../user/user.service.ts";
+import type { UserService } from "../users/users.service.ts";
 import type { JwtServive } from "./jwt.service.ts";
+import { config } from "../../config/env.ts";
 
 export class AuthService {
   private readonly userService: UserService;
@@ -115,6 +116,7 @@ export class AuthService {
       fullName: user.fullName,
       avatarUrl: user.avatarUrl,
       isActivated: user.isActivated,
+      activationLink: `${config.apiUrl ?? ""}${user.activationLink}`, // config.apiUrl ?? "" + user.activationLink,
     };
   }
 }

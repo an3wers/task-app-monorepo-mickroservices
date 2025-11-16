@@ -1,4 +1,4 @@
-import type { UserEntity } from "../../../domain/user/user.domain.ts";
+import type { UserEntity } from "../../../domain/users/users.domain.ts";
 import type { CreateUserData } from "../types/create-user-data.ts";
 import type { UpdateUserData } from "../types/update-user-data.ts";
 

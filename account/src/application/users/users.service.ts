@@ -1,8 +1,8 @@
 import { genSalt, hash, compare } from "bcrypt";
 import { nanoid } from "nanoid";
 
-import type { CreateUserDto } from "../../contracts/user/create.dto.ts";
-import type { IUserRepository } from "./interfaces/user-repository.ts";
+import type { CreateUserDto } from "../../contracts/users/create.dto.ts";
+import type { IUserRepository } from "./interfaces/users-repository.ts";
 import { NotFoundError, ValidationError } from "../../errors/app-error.ts";
 
 export class UserService {
@@ -12,13 +12,13 @@ export class UserService {
   }
 
   async create(dto: CreateUserDto) {
-    const { email, name, password } = dto;
+    const { email, username, password } = dto;
     const hashedPassword = await this.hashPassword(password);
     const activationLink = await this.generateActivationLink(email);
 
     const user = await this.userRepository.create({
       email,
-      name,
+      username,
       activationLink,
       isActivated: true, // TODO: заменить на false, когда будет имплементирован функционал активации пользователя
       password: hashedPassword,

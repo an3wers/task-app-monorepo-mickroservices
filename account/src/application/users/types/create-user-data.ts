@@ -1,6 +1,6 @@
 export interface CreateUserData {
   email: string;
-  name: string;
+  username: string;
   password: string;
   isActivated: boolean;
   activationLink: string;

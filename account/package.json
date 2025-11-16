@@ -9,7 +9,8 @@
     "dev:debug": "node --inspect --watch ./src/index.ts",
     "start": "node ./src/index.ts",
     "build": "rm -rf dist && tsc -build ./tsconfig.json",
-    "start:prod": "cross-env NODE_ENV=production node ./dist/index.js"
+    "start:prod": "cross-env NODE_ENV=production node ./dist/index.js",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",

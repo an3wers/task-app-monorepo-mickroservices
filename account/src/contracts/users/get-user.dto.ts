@@ -5,4 +5,5 @@ export interface GetUserDto {
   fullName: string;
   avatarUrl: string;
   isActivated: boolean;
+  activationLink: string;
 }

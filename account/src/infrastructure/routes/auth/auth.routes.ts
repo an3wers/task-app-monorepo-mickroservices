@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AuthController } from "../../../presenters/auth/auth.controller.ts";
-import type { IUserRepository } from "../../../application/user/interfaces/user-repository.ts";
+import type { IUserRepository } from "../../../application/users/interfaces/users-repository.ts";
 import { checkAuth } from "../../../middleware/auth.middleware.ts";
 import type { ITokenRepository } from "../../../application/auth/interfaces/token-repository.ts";
 

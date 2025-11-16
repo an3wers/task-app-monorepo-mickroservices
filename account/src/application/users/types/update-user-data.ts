@@ -1,5 +1,6 @@
 export interface UpdateUserData {
   email?: string;
-  name?: string;
+  username?: string;
   password?: string;
+  fullName?: string;
 }
