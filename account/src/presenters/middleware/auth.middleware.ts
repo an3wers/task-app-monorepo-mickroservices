@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
-import { UnauthorizedError } from "../errors/app-error.ts";
-import { JwtServive } from "../application/auth/jwt.service.ts";
+import { UnauthorizedError } from "../../errors/app-error.ts";
+import { JwtServive } from "../../application/auth/jwt.service.ts";
 import type { JwtPayload } from "jsonwebtoken";
-import { TokenPrismaRepository } from "../infrastructure/repositories/auth/token.prisma.repository.ts";
+import { TokenPrismaRepository } from "../../infrastructure/repositories/auth/token.prisma.repository.ts";
 
 export interface AuthenticatedRequest extends Request {
   user?: string | JwtPayload;

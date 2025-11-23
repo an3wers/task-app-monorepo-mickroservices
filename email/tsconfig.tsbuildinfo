@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/server.ts","./src/config/env.ts","./src/presenters/errors/app-error.ts","./src/presenters/middleware/error-handler.middleware.ts"],"version":"5.9.3"}

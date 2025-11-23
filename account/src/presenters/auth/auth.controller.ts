@@ -3,7 +3,7 @@ import { AuthService } from "../../application/auth/auth.service.ts";
 import { UserService } from "../../application/users/users.service.ts";
 import { JwtServive } from "../../application/auth/jwt.service.ts";
 import type { IUserRepository } from "../../application/users/interfaces/users-repository.ts";
-import type { AuthenticatedRequest } from "../../middleware/auth.middleware.ts";
+import type { AuthenticatedRequest } from "../middleware/auth.middleware.ts";
 import type { ITokenRepository } from "../../application/auth/interfaces/token-repository.ts";
 import { UnauthorizedError } from "../../errors/app-error.ts";
 

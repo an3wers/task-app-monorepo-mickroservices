@@ -2,7 +2,7 @@ import express, { type Express } from "express";
 import cors from "cors";
 import { config } from "./config/env.ts";
 import { AuthRouter } from "./infrastructure/routes/auth/auth.routes.ts";
-import { errorHandler } from "./middleware/error-handler.middleware.ts";
+import { errorHandler } from "./presenters/middleware/error-handler.middleware.ts";
 import { createDatabaseConfig, DatabasePool } from "@shared/db-lib";
 import { UserPrismaRepository } from "./infrastructure/repositories/users/users.prisma.repository.ts";
 import {
