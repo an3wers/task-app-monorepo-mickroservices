@@ -7,8 +7,8 @@ export interface SaveEmailData {
   subject: string;
   body: string;
   status: EmailStatus;
-  cc: string[];
-  bcc: string[];
+  cc?: string[];
+  bcc?: string[];
   html?: string;
-  attachments: AttachmentEntity[];
+  attachments?: AttachmentEntity[];
 }
