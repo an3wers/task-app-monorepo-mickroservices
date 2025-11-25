@@ -1,9 +1,9 @@
 import { BaseRepository, type PoolClient } from "@shared/db-lib";
-import type { IEmailRepository } from "../application/interfaces/emails.repository.ts";
+import type { EmailsRepository } from "../application/interfaces/emails.repository.ts";
 import type { SaveEmailData } from "../application/types/save-email-data.ts";
-import { EmailEntity } from "../domain/emais.entity.ts";
+import { EmailEntity } from "../domain/email.entity.ts";
 import type { UpdateEmailData } from "../application/types/update-email-data.ts";
-import { AttachmentEntity } from "../domain/attachments.entity.ts";
+import { AttachmentEntity } from "../domain/attachment.entity.ts";
 import { EmailStatus } from "../domain/types.ts";
 
 // DB Tables
@@ -42,34 +42,30 @@ import { EmailStatus } from "../domain/types.ts";
 //     @@index([emailId])
 //   }
 
+interface EmailRow {
+  id: string;
+  from: string;
+  to: string[];
+  cc: string[];
+  bcc: string[];
+  subject: string;
+  body: string;
+  html: string | null;
+  status: string;
+  error: string | null;
+  sentAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export class EmailsSqlRepository
   extends BaseRepository
-  implements IEmailRepository
+  implements EmailsRepository
 {
   async save(data: SaveEmailData): Promise<EmailEntity> {
     return await this.transaction(async (client: PoolClient) => {
-      // Генерируем UUID для письма
-      //   const emailIdResult = await client.query<{ id: string }>(
-      //     "SELECT gen_random_uuid() as id",
-      //   );
-      //   const emailId = emailIdResult.rows[0].id;
-
       // Вставляем письмо
-      const emailResult = await client.query<{
-        id: string;
-        from: string;
-        to: string[];
-        cc: string[];
-        bcc: string[];
-        subject: string;
-        body: string;
-        html: string | null;
-        status: string;
-        error: string | null;
-        sentAt: Date | null;
-        createdAt: Date;
-        updatedAt: Date;
-      }>(
+      const emailResult = await client.query<EmailRow>(
         `INSERT INTO "emails" (
                     "from", "to", cc, bcc, subject, body, html, status, 
                     "createdAt", "updatedAt"
@@ -144,10 +140,153 @@ export class EmailsSqlRepository
       });
     });
   }
-  findById(id: string): Promise<EmailEntity | null> {
-    throw new Error("Method not implemented.");
+  async findById(id: string): Promise<EmailEntity | null> {
+    const emailResult = await this.query<EmailRow>(
+      `SELECT 
+        id, "from", "to", cc, bcc, subject, body, html, status, 
+        error, "sentAt", "createdAt", "updatedAt"
+       FROM "emails" 
+       WHERE id = $1`,
+      [id],
+    );
+
+    const emailRow = emailResult.rows[0];
+
+    if (!emailRow) {
+      return null;
+    }
+
+    // Загружаем вложения
+    const attachmentsResult = await this.query<{
+      id: string;
+      filename: string;
+      originalName: string;
+      mimetype: string;
+      size: number;
+      path: string;
+      createdAt: Date;
+    }>(
+      `SELECT id, filename, "originalName", mimetype, size, path, "createdAt"
+       FROM "attachments" 
+       WHERE "emailId" = $1`,
+      [id],
+    );
+
+    const attachments = attachmentsResult.rows.map(
+      (row) =>
+        new AttachmentEntity({
+          filename: row.filename,
+          originalName: row.originalName,
+          mimetype: row.mimetype,
+          size: row.size,
+          path: row.path,
+        }),
+    );
+
+    // Возвращаем EmailEntity с вложениями
+    return new EmailEntity({
+      id: emailRow.id,
+      from: emailRow.from,
+      to: emailRow.to,
+      subject: emailRow.subject,
+      body: emailRow.body,
+      status: emailRow.status as EmailStatus,
+      createdAt: emailRow.createdAt,
+      cc: emailRow.cc,
+      bcc: emailRow.bcc,
+      html: emailRow.html || undefined,
+      attachments: attachments,
+      sentAt: emailRow.sentAt || undefined,
+      error: emailRow.error || undefined,
+    });
   }
-  update(data: UpdateEmailData): Promise<EmailEntity> {
-    throw new Error("Method not implemented.");
+  async update(data: UpdateEmailData): Promise<EmailEntity> {
+    // Формируем динамический SQL запрос для обновления
+    const updateFields: string[] = ["status = $1", '"updatedAt" = NOW()'];
+    const values: any[] = [data.status];
+    let paramIndex = 2;
+
+    if (data.sentAt !== undefined) {
+      updateFields.push(`"sentAt" = $${paramIndex}`);
+      values.push(data.sentAt);
+      paramIndex++;
+    }
+
+    if (data.error !== undefined) {
+      updateFields.push(`error = $${paramIndex}`);
+      values.push(data.error);
+      paramIndex++;
+    }
+
+    // Добавляем id в конец для WHERE условия
+    values.push(data.id);
+
+    // Обновляем запись
+    await this.query(
+      `UPDATE "emails" 
+       SET ${updateFields.join(", ")} 
+       WHERE id = $${paramIndex}`,
+      values,
+    );
+
+    // Получаем обновленную запись
+    const emailResult = await this.query<EmailRow>(
+      `SELECT 
+        id, "from", "to", cc, bcc, subject, body, html, status, 
+        error, "sentAt", "createdAt", "updatedAt"
+       FROM "emails" 
+       WHERE id = $1`,
+      [data.id],
+    );
+
+    const emailRow = emailResult.rows[0];
+
+    if (!emailRow) {
+      throw new Error(`Email with id ${data.id} not found`);
+    }
+
+    // Загружаем вложения
+    const attachmentsResult = await this.query<{
+      id: string;
+      filename: string;
+      originalName: string;
+      mimetype: string;
+      size: number;
+      path: string;
+      createdAt: Date;
+    }>(
+      `SELECT id, filename, "originalName", mimetype, size, path, "createdAt"
+       FROM "attachments" 
+       WHERE "emailId" = $1`,
+      [data.id],
+    );
+
+    const attachments = attachmentsResult.rows.map(
+      (row) =>
+        new AttachmentEntity({
+          filename: row.filename,
+          originalName: row.originalName,
+          mimetype: row.mimetype,
+          size: row.size,
+          path: row.path,
+        }),
+    );
+
+    // Возвращаем EmailEntity с вложениями
+    return new EmailEntity({
+      id: emailRow.id,
+      from: emailRow.from,
+      to: emailRow.to,
+      subject: emailRow.subject,
+      body: emailRow.body,
+      status: emailRow.status as EmailStatus,
+      createdAt: emailRow.createdAt,
+      cc: emailRow.cc,
+      bcc: emailRow.bcc,
+      html: emailRow.html || undefined,
+      attachments: attachments,
+      sentAt: emailRow.sentAt || undefined,
+      error: emailRow.error || undefined,
+    });
   }
 }

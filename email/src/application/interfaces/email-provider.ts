@@ -1,4 +1,4 @@
-import type { EmailEntity } from "../emais.entity.ts";
+import type { EmailEntity } from "../../domain/email.entity.ts";
 
 export interface SendEmailResult {
   success: boolean;

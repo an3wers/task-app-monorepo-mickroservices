@@ -1,9 +1,9 @@
-import type { AttachmentEntity } from "../domain/attachments.entity.ts";
-import type { IEmailRepository } from "./interfaces/emails.repository.ts";
+import type { AttachmentEntity } from "../domain/attachment.entity.ts";
+import type { EmailsRepository } from "./interfaces/emails.repository.ts";
 import { config } from "../config/env.ts";
 import { EmailStatus } from "../domain/types.ts";
-import type { EmailProvider } from "../domain/interfaces/email-provider.ts";
-import type { EmailEntity } from "../domain/emais.entity.ts";
+import type { EmailProvider } from "./interfaces/email-provider.ts";
+import type { EmailEntity } from "../domain/email.entity.ts";
 
 export interface SendEmailRequest {
   to: string[];
@@ -16,11 +16,11 @@ export interface SendEmailRequest {
 }
 
 export class EmailsService {
-  private readonly emailsRepository: IEmailRepository;
+  private readonly emailsRepository: EmailsRepository;
   private readonly emailProvider: EmailProvider;
 
   constructor(
-    emailsRepository: IEmailRepository,
+    emailsRepository: EmailsRepository,
     emailProvider: EmailProvider,
   ) {
     this.emailsRepository = emailsRepository;
@@ -63,11 +63,13 @@ export class EmailsService {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error";
+
       const failedEmail = this.emailsRepository.update({
         id: savedEmail.id,
         status: EmailStatus.FAILED,
         error: errorMessage,
       });
+
       return failedEmail;
     }
   }

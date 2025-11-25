@@ -1,4 +1,4 @@
-import type { AttachmentEntity } from "../../domain/attachments.entity.ts";
+import type { AttachmentEntity } from "../../domain/attachment.entity.ts";
 import type { EmailStatus } from "../../domain/types.ts";
 
 export interface SaveEmailData {
