@@ -4,6 +4,9 @@ import { config } from "./config/env.ts";
 import { errorHandler } from "./presenters/middleware/error-handler.middleware.ts";
 
 import { createDatabaseConfig, DatabasePool } from "@shared/db-lib";
+import { EmailRouter } from "./infrastructure/email.routes.ts";
+import { EmailsSqlRepository } from "./infrastructure/emails.sql.repository.ts";
+import { NodemailerProvider } from "./infrastructure/nodemailer-provider.ts";
 
 let db: DatabasePool;
 const app: Express = express();
@@ -17,9 +20,10 @@ try {
   );
 
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // db
-  db = new DatabasePool(createDatabaseConfig());
+  db = new DatabasePool(createDatabaseConfig("emailservice"));
 
   // health check
   app.get("/api/health", (req, res) => {
@@ -29,6 +33,16 @@ try {
       service: "Email service",
     });
   });
+
+  // routes
+  // dependencies
+  const emailsRepository = new EmailsSqlRepository(db);
+  const emailProvider = new NodemailerProvider();
+
+  app.use(
+    "/api/emails",
+    new EmailRouter(emailsRepository, emailProvider).router,
+  );
 
   // 404 handler
   app.use((req, res) => {

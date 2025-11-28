@@ -73,6 +73,8 @@ export function createDatabaseConfig(serviceName?: string): PoolConfig {
       process.env.DATABASE_NAME
     : process.env.DATABASE_NAME;
 
+  console.log("dbName", dbName);
+
   return {
     host: process.env.DATABASE_HOST || "localhost",
     port: parseInt(process.env.DATABASE_PORT || "5432"),

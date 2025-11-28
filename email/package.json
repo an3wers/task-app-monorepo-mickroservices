@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch ./src/index.ts",
-    "dev:debug": "node --inspect --watch ./src/index.ts",
+    "dev:debug": "node --inspect-brk  --watch ./src/index.ts",
     "start": "node ./src/index.ts",
     "build": "rm -rf dist && tsc -build ./tsconfig.json",
     "start:prod": "cross-env NODE_ENV=production node ./dist/index.js",

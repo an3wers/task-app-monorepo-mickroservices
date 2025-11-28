@@ -13,25 +13,6 @@ export class AuthRouter {
   }
 
   get router() {
-    // TODO: add validation middleware
-    // this._router.post(
-    //   "/register",
-    //   this.authController.register.bind(this.authController),
-    // );
-    // this._router.post(
-    //   "/login",
-    //   this.authController.login.bind(this.authController),
-    // );
-    // this._router.post(
-    //   "/refresh-tokens",
-    //   this.authController.refreshTokens.bind(this.authController),
-    // );
-    // this._router.get(
-    //   "/me",
-    //   checkAuth,
-    //   this.authController.getMe.bind(this.authController),
-    // );
-
     this._router.get(
       "/activate/:link",
       this.usersController.activateUser.bind(this.usersController),
