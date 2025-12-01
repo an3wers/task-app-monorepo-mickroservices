@@ -16,7 +16,7 @@ export class NodemailerProvider implements EmailProvider {
   async send(email: EmailEntity): Promise<SendEmailResult> {
     try {
       const mailOptions = {
-        from: email.from,
+        from: `an3wer.ru <${email.from}>`,
         to: email.to.join(", "),
         cc: email.cc?.join(", "),
         bcc: email.bcc?.join(", "),

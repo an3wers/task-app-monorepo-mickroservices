@@ -9,6 +9,7 @@ export class EmailEntity {
   public readonly body: string;
   public readonly status: EmailStatus;
   public readonly createdAt: Date;
+  public readonly updatedAt: Date;
   public readonly cc: string[] = [];
   public readonly bcc: string[] = [];
   public readonly html?: string;
@@ -24,6 +25,7 @@ export class EmailEntity {
     this.body = data.body;
     this.status = data.status;
     this.createdAt = data.createdAt;
+    this.updatedAt = data.updatedAt;
     this.cc = data.cc;
     this.bcc = data.bcc;
     this.html = data.html;

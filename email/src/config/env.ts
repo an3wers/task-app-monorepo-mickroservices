@@ -5,6 +5,7 @@ dotenvConfig();
 export const config = {
   origin: process.env.ORIGIN || "http://localhost",
   port: Number(process.env.PORT) || 3011,
+  serviceDomain: process.env.SERVICE_DOMAIN || "",
   nodeEnv: process.env.NODE_ENV || "development",
   apiUrl:
     process.env.NODE_ENV === "production"

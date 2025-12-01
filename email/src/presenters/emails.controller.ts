@@ -71,6 +71,8 @@ export class EmailsController {
         to: email.to,
         subject: email.subject,
         createdAt: email.createdAt,
+        updatedAt: email.updatedAt,
+        attachments: email.attachments,
         sentAt: email.sentAt,
         error: email.error,
       });

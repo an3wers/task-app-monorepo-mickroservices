@@ -6,42 +6,6 @@ import type { UpdateEmailData } from "../application/types/update-email-data.ts"
 import { AttachmentEntity } from "../domain/attachment.entity.ts";
 import { EmailStatus } from "../domain/types.ts";
 
-// DB Tables
-// model Email {
-//     id          String        @id @default(uuid())
-//     from        String
-//     to          String[]
-//     cc          String[]      @default([])
-//     bcc         String[]      @default([])
-//     subject     String
-//     body        String        @db.Text
-//     html        String?       @db.Text
-//     status      EmailStatus   @default(PENDING)
-//     error       String?       @db.Text
-//     sentAt      DateTime?
-//     createdAt   DateTime      @default(now())
-//     updatedAt   DateTime      @updatedAt
-//     attachments Attachment[]
-
-//     @@index([status])
-//     @@index([createdAt])
-//   }
-
-//   model Attachment {
-//     id          String   @id @default(uuid())
-//     emailId     String
-//     filename    String
-//     originalName String
-//     mimetype    String
-//     size        Int
-//     path        String
-//     createdAt   DateTime @default(now())
-
-//     email       Email    @relation(fields: [emailId], references: [id], onDelete: Cascade)
-
-//     @@index([emailId])
-//   }
-
 interface EmailRow {
   id: string;
   from: string;
@@ -131,6 +95,7 @@ export class EmailsSqlRepository
         body: emailRow.body,
         status: emailRow.status as EmailStatus,
         createdAt: emailRow.createdAt,
+        updatedAt: emailRow.updatedAt,
         cc: emailRow.cc,
         bcc: emailRow.bcc,
         html: emailRow.html || undefined,
@@ -192,6 +157,7 @@ export class EmailsSqlRepository
       body: emailRow.body,
       status: emailRow.status as EmailStatus,
       createdAt: emailRow.createdAt,
+      updatedAt: emailRow.updatedAt,
       cc: emailRow.cc,
       bcc: emailRow.bcc,
       html: emailRow.html || undefined,
@@ -281,6 +247,7 @@ export class EmailsSqlRepository
       body: emailRow.body,
       status: emailRow.status as EmailStatus,
       createdAt: emailRow.createdAt,
+      updatedAt: emailRow.updatedAt,
       cc: emailRow.cc,
       bcc: emailRow.bcc,
       html: emailRow.html || undefined,
