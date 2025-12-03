@@ -19,11 +19,9 @@ export class EmailsController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      // Валидация входных данных
       const validatedData = SendEmailDtoSchema.parse(req.body);
       const normalized = normalizeSendEmailDto(validatedData);
 
-      // Обработка вложений
       const attachments =
         (req.files as Express.Multer.File[])?.map((file) => ({
           filename: file.filename,
@@ -33,7 +31,6 @@ export class EmailsController {
           path: file.path,
         })) || [];
 
-      // Отправка email
       const result = await this.emailService.sendEmail({
         ...normalized,
         attachments,
@@ -51,6 +48,8 @@ export class EmailsController {
       next(error);
     }
   };
+
+  // TODO: Add a method to get all emails with pagination
 
   getEmailStatus = async (
     req: Request,

@@ -18,6 +18,7 @@
   "packageManager": "pnpm@10.17.1",
   "dependencies": {
     "@shared/db-lib": "workspace:*",
+    "amqplib": "^0.10.9",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "multer": "^2.0.2",
@@ -26,6 +27,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.8",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.4",
     "@types/multer": "^2.0.0",

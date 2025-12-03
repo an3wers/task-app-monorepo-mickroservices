@@ -105,6 +105,7 @@ export class EmailsSqlRepository
       });
     });
   }
+
   async findById(id: string): Promise<EmailEntity | null> {
     const emailResult = await this.query<EmailRow>(
       `SELECT 
@@ -166,6 +167,7 @@ export class EmailsSqlRepository
       error: emailRow.error || undefined,
     });
   }
+
   async update(data: UpdateEmailData): Promise<EmailEntity> {
     // Формируем динамический SQL запрос для обновления
     const updateFields: string[] = ["status = $1", '"updatedAt" = NOW()'];

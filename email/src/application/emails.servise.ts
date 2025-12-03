@@ -42,7 +42,9 @@ export class EmailsService {
     });
 
     try {
-      // send email
+      // TODO: реализовать процесс через транзакцию
+      // какая есть сейчас проблема, при проверке result.success если он true, то обновление статуса может упасть, но письмо отправлено
+      // будут неконсистентные данные в базе
       const result = await this.emailProvider.send(savedEmail);
 
       if (result.success) {
@@ -77,4 +79,5 @@ export class EmailsService {
   async getEmailStatus(emailId: string): Promise<EmailEntity | null> {
     return this.emailsRepository.findById(emailId);
   }
+  // TODO: getEmails() {}
 }

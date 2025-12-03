@@ -9,13 +9,8 @@ export class EmailRouter {
   private _router: Router;
   private emailsController: EmailsController;
 
-  constructor(
-    emailsRepository: EmailsRepository,
-    emailProvider: EmailProvider,
-  ) {
-    this.emailsController = new EmailsController(
-      new EmailsService(emailsRepository, emailProvider),
-    );
+  constructor(emailsController: EmailsController) {
+    this.emailsController = emailsController;
     this._router = Router();
   }
 

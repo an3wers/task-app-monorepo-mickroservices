@@ -7,6 +7,10 @@ import { createDatabaseConfig, DatabasePool } from "@shared/db-lib";
 import { EmailRouter } from "./infrastructure/email.routes.ts";
 import { EmailsSqlRepository } from "./infrastructure/emails.sql.repository.ts";
 import { NodemailerProvider } from "./infrastructure/nodemailer-provider.ts";
+import { EmailsController } from "./presenters/emails.controller.ts";
+import { EmailsService } from "./application/emails.servise.ts";
+import { RabbitMQService } from "./infrastructure/queue/rabbitmq.service.ts";
+import { EmailConsumer } from "./infrastructure/queue/email-consumer.ts";
 
 let db: DatabasePool;
 const app: Express = express();
@@ -35,14 +39,14 @@ try {
   });
 
   // routes
+
   // dependencies
   const emailsRepository = new EmailsSqlRepository(db);
   const emailProvider = new NodemailerProvider();
+  const emailsService = new EmailsService(emailsRepository, emailProvider);
+  const emailsController = new EmailsController(emailsService);
 
-  app.use(
-    "/api/emails",
-    new EmailRouter(emailsRepository, emailProvider).router,
-  );
+  app.use("/api/emails", new EmailRouter(emailsController).router);
 
   // 404 handler
   app.use((req, res) => {
@@ -53,6 +57,13 @@ try {
   });
 
   app.use(errorHandler);
+
+  // RabbitMQ Consumer
+  const queueService = new RabbitMQService();
+  await queueService.connect();
+
+  const emailConsumer = new EmailConsumer(queueService, emailsService);
+  await emailConsumer.start();
 } catch (error) {
   console.error(error);
   throw error;

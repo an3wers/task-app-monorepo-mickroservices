@@ -23,6 +23,13 @@ export const config = {
     from: process.env.SMTP_FROM || "noreply@example.com",
   },
 
+  rabbitmq: {
+    url: process.env.RABBITMQ_URL || "amqp://localhost:5672",
+    queue: process.env.RABBITMQ_QUEUE || "email.send",
+    exchange: "email.exchange",
+    routingKey: "email.send",
+  },
+
   storage: {
     uploadDir: process.env.UPLOAD_DIR || "./uploads",
     maxFileSize: parseInt(process.env.MAX_FILE_SIZE || "10485760", 10), // 10MB
