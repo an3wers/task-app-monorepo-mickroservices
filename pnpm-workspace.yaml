@@ -1,6 +1,6 @@
 packages:
   - account
   - board
-  - email
   - files
+  - feedback
   - shared/*

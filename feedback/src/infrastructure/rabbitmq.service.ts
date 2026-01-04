@@ -1,15 +1,13 @@
 import amqp, { type Channel, type ChannelModel } from "amqplib";
-import { config } from "../../config/env.ts";
-import type { QueueService } from "../../application/interfaces/queue-service.ts";
+import { config } from "../config/env.ts";
 
-export class RabbitMQService implements QueueService {
+export class RabbitMQService {
   private connection: ChannelModel | null = null;
   private channel: Channel | null = null;
 
   async connect(): Promise<void> {
     try {
       this.connection = await amqp.connect(config.rabbitmq.url);
-
       this.channel = await this.connection.createChannel();
 
       await this.channel.assertExchange(config.rabbitmq.exchange, "direct", {
@@ -39,7 +37,18 @@ export class RabbitMQService implements QueueService {
     }
 
     const messageBuffer = Buffer.from(JSON.stringify(message));
-    this.channel.sendToQueue(queue, messageBuffer, { persistent: true });
+
+    // send to queue
+    // this.channel.sendToQueue(queue, messageBuffer, { persistent: true });
+
+    // send to exchange
+
+    this.channel.publish(
+      config.rabbitmq.exchange,
+      config.rabbitmq.routingKey,
+      messageBuffer,
+      { persistent: true },
+    );
   }
 
   async consume(

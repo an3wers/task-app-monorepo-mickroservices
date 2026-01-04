@@ -7,6 +7,7 @@
     "brd": "pnpm --filter @task_app_mks/board",
     "eml": "pnpm --filter @task_app_mks/email",
     "fls": "pnpm --filter @task_app_mks/files",
+    "fdb": "pnpm --filter @task_app_mks/feedback",
     "prisma:md": "prisma migrate dev",
     "prisma:gen": "prisma generate",
     "prisma:push": "prisma db push",
