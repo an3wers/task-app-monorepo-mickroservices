@@ -12,7 +12,9 @@ export class AuthRouter {
     userRepository: IUserRepository,
     tokenRepository: ITokenRepository,
   ) {
+    // TODO: implement through DI
     this.authController = new AuthController(userRepository, tokenRepository);
+
     this._router = Router();
   }
 

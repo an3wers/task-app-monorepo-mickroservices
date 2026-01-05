@@ -26,18 +26,20 @@ try {
 
   // routes
   app.post("/api/feedback", (req, res) => {
-    const { title, message } = req.body;
+    const { from, message } = req.body;
 
-    if (!title || !message) {
+    if (!from || !message) {
       return res.status(400).json({
-        error: "Title and message are required",
+        error: "From and Message are required",
       });
     }
 
     rmqService.publish(config.rabbitmq.queue, {
-      to: "claim@an3wer.ru",
+      to: config.toEmailFeedback,
+      from: from,
+      fromDisplayName: "Feedback Service",
       subject: "New feedback",
-      html: `<h2>${title}</h2><p>${message}</p>`,
+      html: `<h2>New feedback</h2><p>${message}</p>`,
     });
 
     return res.status(200).json({

@@ -42,7 +42,6 @@ export class RabbitMQService {
     // this.channel.sendToQueue(queue, messageBuffer, { persistent: true });
 
     // send to exchange
-
     this.channel.publish(
       config.rabbitmq.exchange,
       config.rabbitmq.routingKey,
